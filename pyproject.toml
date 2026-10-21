@@ -1,19 +1,17 @@
 [project]
-name = "hw2"
+name = "primitive-db"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
     { name = "pasheee", email = "pasheee@mail.ru" }
 ]
-requires-python = ">=3.10"
-dependencies = [
-    "ruff>=0.17.1",
-]
+requires-python = ">=3.12"
+dependencies = []
 
 [project.scripts]
-hw2 = "hw2:main"
+project = "primitive_db.main:main"
 
 [build-system]
-requires = ["uv_build>=0.12.9,<0.13.0"]
+requires = ["uv_build>=0.13.4,<0.14.0"]
 build-backend = "uv_build"
