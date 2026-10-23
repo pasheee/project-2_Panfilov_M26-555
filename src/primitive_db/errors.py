@@ -16,3 +16,11 @@ class ColumnTypeError(DatabaseError):
 
 class ParseArgumentsError(DatabaseError):
     pass
+
+
+class ColumnLengthError(DatabaseError):
+    pass
+
+
+class ColumnDoesntExist(DatabaseError):
+    pass
