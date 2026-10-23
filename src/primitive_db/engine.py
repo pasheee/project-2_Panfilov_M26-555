@@ -93,6 +93,7 @@ EXEC_COMMANDS: dict[str, ExecCommand] = {
 
 @handle_db_errors
 def execute_command(user_input: str) -> None:
+    """выполняет команду"""
     parts = user_input.split(maxsplit=1)
     if not parts:
         return
@@ -125,6 +126,7 @@ def execute_command(user_input: str) -> None:
 
 @handle_db_errors
 def run():
+    """запускает цикл ввода команд"""
     if not METADATA_FILEPATH.exists():
         METADATA_FILEPATH.write_text("{}", encoding="utf-8")
 

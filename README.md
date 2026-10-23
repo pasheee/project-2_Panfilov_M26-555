@@ -86,13 +86,12 @@ exit
 Схемы хранятся в `meta.json`, данные таблиц — в `data/<таблица>.json`
 рядом с модулем `constants.py`, независимо от текущей папки терминала.
 При установке через `uv tool` эти файлы находятся внутри установленного пакета.
-`drop_table` удаляет описание таблицы из метаданных; её JSON-файл пока сохраняется.
+`drop_table` удаляет описание таблицы из метаданных и её JSON-файл.
 
 ## Проверки
 
 ```bash
 uv run ruff check .
-uv run python -m unittest discover -s tests -v
 uv build
 uvx twine check dist/*
 ```

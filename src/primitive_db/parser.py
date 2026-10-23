@@ -8,6 +8,7 @@ from .models import Metadata
 
 
 def _shlex_split(raw_args: str) -> list[str]:
+    """разбивает аргументы с учётом кавычек"""
     try:
         return shlex.split(raw_args)
     except ValueError as exc:
@@ -15,6 +16,7 @@ def _shlex_split(raw_args: str) -> list[str]:
 
 
 def parse_create_table(raw_args: str, metadata: Metadata) -> dict[str, Any]:
+    """разбирает аргументы create_table"""
     args = _shlex_split(raw_args)
 
     if len(args) < 2 or not args[0]:
@@ -31,6 +33,7 @@ def parse_create_table(raw_args: str, metadata: Metadata) -> dict[str, Any]:
 
 
 def parse_drop_table(raw_args: str, metadata: Metadata) -> dict[str, str]:
+    """разбирает аргументы drop_table"""
     args = _shlex_split(raw_args)
 
     if len(args) != 1 or not args[0]:
@@ -40,6 +43,7 @@ def parse_drop_table(raw_args: str, metadata: Metadata) -> dict[str, str]:
 
 
 def parse_insert(raw_args: str, metadata: Metadata) -> dict[str, Any]:
+    """разбирает аргументы insert"""
     args = raw_args.split(maxsplit=3)
     if len(args) != 4 or args[0] != "into" or args[2] != "values":
         raise ParseArgumentsError(f"Failed to parse {args}")
@@ -64,6 +68,7 @@ def parse_insert(raw_args: str, metadata: Metadata) -> dict[str, Any]:
 
 
 def parse_select(raw_args: str, metadata: Metadata) -> dict[str, Any]:
+    """разбирает аргументы select"""
     args = _shlex_split(raw_args)
 
     if len(args) not in (2, 6) or args[0] != "from":
@@ -83,6 +88,7 @@ def parse_select(raw_args: str, metadata: Metadata) -> dict[str, Any]:
 
 
 def parse_update(raw_args: str, metadata: Metadata) -> dict[str, Any]:
+    """разбирает аргументы update"""
     args = _shlex_split(raw_args)
 
     if (
@@ -106,6 +112,7 @@ def parse_update(raw_args: str, metadata: Metadata) -> dict[str, Any]:
 
 
 def parse_delete(raw_args: str, metadata: Metadata) -> dict[str, Any]:
+    """разбирает аргументы delete"""
     args = _shlex_split(raw_args)
 
     if len(args) != 6 or args[0] != "from" or args[2] != "where" or args[4] != "=":
@@ -122,6 +129,7 @@ def parse_delete(raw_args: str, metadata: Metadata) -> dict[str, Any]:
 
 
 def parse_info(raw_args: str, metadata: Metadata) -> dict[str, Any]:
+    """разбирает аргументы info"""
     args = _shlex_split(raw_args)
 
     if len(args) != 1 or not args[0]:

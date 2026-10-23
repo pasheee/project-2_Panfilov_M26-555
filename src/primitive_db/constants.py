@@ -6,6 +6,7 @@ ID = ("ID", "int")
 
 
 def _bool(val: str):
+    """преобразует true или false в bool"""
     if val == "true":
         return True
     if val == "false":

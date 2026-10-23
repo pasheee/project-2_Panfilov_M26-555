@@ -3,6 +3,7 @@ from . import engine
 
 
 def main():
+    """запускает программу"""
     engine.run()
 
 
