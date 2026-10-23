@@ -18,6 +18,7 @@ from .models import (
     TableDataEnum,
     get_tmp_table,
 )
+from .utils import delete_table
 from .utils import select_cache as _select_cache
 
 
@@ -27,6 +28,7 @@ def exit_programm(*args, **kwargs):
 
 
 def _validate_clause(clause: dict[str, Any], columns: Iterable[str]):
+    """проверяет имена столбцов"""
     for col in clause:
         if col not in columns:
             raise ColumnDoesntExist(f'Столбец "{col}" не существует.')
@@ -35,6 +37,7 @@ def _validate_clause(clause: dict[str, Any], columns: Iterable[str]):
 def _find_rows_idx(
     values: list[dict[str, Any]], where_clause: dict[str, Any]
 ) -> list[int]:
+    """находит индексы строк по условию"""
     return [
         i
         for i, row in enumerate(values)
@@ -72,6 +75,7 @@ def drop_table(metadata: dict, table_name: str, **kwargs: Any) -> Metadata:
     if table_name not in metadata:
         raise TableDoesntExist(f'Таблица "{table_name}" не существует.')
 
+    delete_table(table_name)
     del metadata[table_name]
     print(f'Таблица "{table_name}" успешно удалена.')
     return metadata
@@ -88,6 +92,7 @@ def list_tables(metadata: Metadata, **kwargs: Any) -> Metadata:
 
 
 def cast_values(values: dict[str, str], column_types: dict[str, str]) -> dict[str, Any]:
+    """приводит значения к типам столбцов"""
     _validate_clause(values, column_types)
     return {col: CORRECT_TYPES[column_types[col]](values[col]) for col in values}
 
@@ -131,6 +136,7 @@ def select(
     _validate_clause(where_clause, columns)
 
     def get_result() -> TableData:
+        """собирает результат выборки"""
         indices = _find_rows_idx(values, where_clause)
         tmp_table = get_tmp_table()
         tmp_table[TableDataEnum.COLUMNS.value] = columns.copy()

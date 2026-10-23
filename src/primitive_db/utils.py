@@ -19,6 +19,7 @@ type CacheKey = tuple[str, Hashable]
 
 
 def load_metadata(filepath: str | Path) -> Metadata:
+    """загружает метаданные"""
     try:
         with open(filepath, "r") as f:
             return json.load(f)
@@ -28,6 +29,7 @@ def load_metadata(filepath: str | Path) -> Metadata:
 
 
 def save_metadata(data: dict, filepath: str | Path = METADATA_FILEPATH) -> None:
+    """сохраняет метаданные"""
     previous = load_metadata(filepath) if Path(filepath).exists() else {}
     with open(filepath, "w") as f:
         json.dump(data, f)
@@ -37,6 +39,7 @@ def save_metadata(data: dict, filepath: str | Path = METADATA_FILEPATH) -> None:
 
 
 def load_table_data(table_name: str) -> TableData:
+    """загружает данные таблицы"""
     filepath = TABLE_DATA_PATH / f"{table_name}.json"
     try:
         with open(filepath, "r") as f:
@@ -46,6 +49,7 @@ def load_table_data(table_name: str) -> TableData:
 
 
 def save_table_data(data: TableData) -> None:
+    """сохраняет данные таблицы"""
     filepath = TABLE_DATA_PATH / f"{data[TableDataEnum.TABLE_NAME.value]}.json"
 
     filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -54,7 +58,13 @@ def save_table_data(data: TableData) -> None:
     clear_select_cache(data[TableDataEnum.TABLE_NAME.value])
 
 
+def delete_table(table_name: str) -> None:
+    """удаляет файл таблицы"""
+    (TABLE_DATA_PATH / f"{table_name}.json").unlink(missing_ok=True)
+
+
 def print_table(table_data: TableData) -> None:
+    """выводит таблицу"""
     values = table_data[TableDataEnum.VALUES.value]
     columns = table_data[TableDataEnum.COLUMNS.value]
     if not values:
@@ -68,6 +78,7 @@ def print_table(table_data: TableData) -> None:
 
 
 def prepare_table(table_name: str, columns: dict[str, str]) -> TableData:
+    """загружает таблицу или создаёт пустую"""
     table_data = load_table_data(table_name)
     if not table_data[TableDataEnum.TABLE_NAME.value]:
         table_data[TableDataEnum.TABLE_NAME.value] = table_name
@@ -76,15 +87,18 @@ def prepare_table(table_name: str, columns: dict[str, str]) -> TableData:
 
 
 def none_func(*args, **kwargs) -> None:
+    """ничего не делает"""
     return None
 
 
 def create_cacher() -> tuple[
     Callable[[CacheKey, Callable[[], R]], R], Callable[[str], None]
 ]:
+    """создаёт кэшер и функцию очистки"""
     cache: dict[str, dict[Hashable, Any]] = {}
 
     def cacher(key: CacheKey, func: Callable[[], R]) -> R:
+        """возвращает результат из кэша или вычисляет его"""
         table_name, condition = key
         table_cache = cache.setdefault(table_name, {})
         if condition not in table_cache:
@@ -92,6 +106,7 @@ def create_cacher() -> tuple[
         return table_cache[condition]
 
     def clear(table_name: str) -> None:
+        """очищает кэш указанной таблицы"""
         cache.pop(table_name, None)
 
     return cacher, clear

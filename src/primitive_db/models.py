@@ -3,6 +3,7 @@ from typing import Any, Callable, TypedDict
 
 
 def gen():
+    """генерирует номера временных таблиц"""
     id = 0
     while True:
         yield id
@@ -38,6 +39,7 @@ tmp_id_gen = gen()
 
 
 def get_tmp_table() -> TableData:
+    """создаёт временную таблицу"""
     tmp_table: TableData = {
         TableDataEnum.TABLE_NAME.value: f"tmp_{next(tmp_id_gen)}",
         TableDataEnum.COLUMNS.value: {},
@@ -48,6 +50,7 @@ def get_tmp_table() -> TableData:
 
 
 def get_empty_table() -> TableData:
+    """создаёт пустые данные таблицы"""
     empty_table_data: TableData = {
         TableDataEnum.TABLE_NAME.value: "",
         TableDataEnum.COLUMNS.value: {},
@@ -57,5 +60,6 @@ def get_empty_table() -> TableData:
 
 
 def get_empty_metadata() -> Metadata:
+    """создаёт пустые метаданные"""
     empty_metadata: Metadata = {}
     return empty_metadata

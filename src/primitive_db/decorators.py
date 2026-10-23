@@ -11,6 +11,8 @@ R = TypeVar("R")
 
 
 def handle_db_errors(func: Callable[P, R]) -> Callable[P, R | None]:
+    """обрабатывает ошибки команд"""
+
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R | None:
         try:
@@ -30,6 +32,8 @@ def handle_db_errors(func: Callable[P, R]) -> Callable[P, R | None]:
 def confirm_action(
     action_name: str,
 ) -> Callable[[Callable[P, R]], Callable[P, R | None]]:
+    """запрашивает подтверждение действия"""
+
     def decorator(func: Callable[P, R]) -> Callable[P, R | None]:
         @wraps(func)
         def wrapper(*args: P.args, **kwargs: P.kwargs) -> R | None:
@@ -47,6 +51,8 @@ def confirm_action(
 
 
 def log_time(func: Callable[P, R]) -> Callable[P, R]:
+    """выводит время выполнения функции"""
+
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         start = time.perf_counter()
